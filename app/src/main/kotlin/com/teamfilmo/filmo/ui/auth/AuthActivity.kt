@@ -32,6 +32,9 @@ class AuthActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             viewModel.requestKakaoLogin(this)
         }
 
+    override fun init() {
+        super.init()
+
         NaverIdLoginSDK.showDevelopersLog(true)
 
         binding.notice.text =
