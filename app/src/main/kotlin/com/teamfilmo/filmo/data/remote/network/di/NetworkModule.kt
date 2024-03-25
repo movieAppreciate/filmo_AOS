@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.teamfilmo.filmo.data.remote.network.adapter.ResultCallAdapter
 import com.teamfilmo.filmo.data.remote.network.policy.BaseUrl
 import com.teamfilmo.filmo.data.remote.network.policy.ConnectTimeout
+import com.teamfilmo.filmo.data.remote.network.policy.ContentType
 import com.teamfilmo.filmo.data.remote.network.policy.ReadTimeout
 import com.teamfilmo.filmo.data.remote.network.policy.RetryCount
 import com.teamfilmo.filmo.data.remote.network.policy.ServiceNetworkPolicy
@@ -45,14 +46,16 @@ object NetworkModule {
         servicePolicy: ServiceNetworkPolicy,
     ): Int = servicePolicy.retryCount
 
+
     @Provides
     @Singleton
     fun provideRetrofit(
         @BaseUrl baseUrl: String,
         @RetryCount retryCount: Int,
         okHttpClient: OkHttpClient,
+        @ContentType contentType: String,
     ): Retrofit {
-        val contentType = "application/json".toMediaType()
+        val contentType = contentType.toMediaType()
         return Retrofit
             .Builder()
             .baseUrl(baseUrl)
