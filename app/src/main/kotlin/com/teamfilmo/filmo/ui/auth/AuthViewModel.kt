@@ -3,6 +3,8 @@ package com.teamfilmo.filmo.ui.auth
 import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -34,6 +36,10 @@ class AuthViewModel
         private val googleLoginRequestUseCase: GoogleLoginRequestUseCase,
         private val kakaoLoginRequestUseCase: KakaoLoginRequestUseCase,
     ) : BaseViewModel<NoEffect, NoEvent>() {
+        private val _loginSuccess = MutableLiveData<Boolean>()
+        val loginSuccess: LiveData<Boolean>
+            get() = _loginSuccess
+
         fun requestKakaoLogin(context: Context) {
             launch {
                 runCatching {
@@ -45,6 +51,7 @@ class AuthViewModel
                             } else if (token != null) {
                                 Timber.i("kakao login success, ${token.accessToken}")
                                 continuation.resume(token)
+                                _loginSuccess.value = true
                             }
                         }
 
@@ -82,6 +89,7 @@ class AuthViewModel
                 kakaoLoginRequestUseCase(email)
                     .onSuccess {
                         Timber.d("kakao login success")
+                        _loginSuccess.value = true
                     }
                     .onFailure {
                         Timber.e("kakao login failed: ${it.message}")
@@ -99,6 +107,7 @@ class AuthViewModel
                                     override fun onSuccess() {
                                         Timber.d("naver login success, token: ${NaverIdLoginSDK.getAccessToken()}")
                                         continuation.resume(NaverIdLoginSDK.getAccessToken().toString())
+                                        _loginSuccess.value = true
                                     }
 
                                     override fun onFailure(
@@ -194,6 +203,7 @@ class AuthViewModel
                 googleLoginRequestUseCase(credential)
                     .onSuccess {
                         Timber.d("google login success")
+                        _loginSuccess.value = true
                     }
                     .onFailure {
                         Timber.e("google login failed: ${it.message}")

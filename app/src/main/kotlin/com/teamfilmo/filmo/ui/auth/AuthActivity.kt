@@ -9,6 +9,7 @@ import androidx.core.text.buildSpannedString
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityAuthBinding
+import com.teamfilmo.filmo.ui.report.MainPageActivity
 import com.teamfilmo.filmo.util.click
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,5 +51,13 @@ class AuthActivity : BaseActivity<ActivityAuthBinding>(ActivityAuthBinding::infl
                 append("(마케팅 정보 수신 동의 포함)에 동의하게 됩니다.")
             }
         binding.notice.movementMethod = LinkMovementMethod.getInstance()
+
+        viewModel.loginSuccess.observe(this) { success ->
+            if (success) {
+                val intent = Intent(this, MainPageActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 }
