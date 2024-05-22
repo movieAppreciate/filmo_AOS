@@ -44,17 +44,8 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     ) {
         this.reportList = newReportList.subList(startIndex, endIndex + 1)
         Log.d("어댑터 reportList", reportList.get(0).title)
-        notifyItemRangeChanged(startIndex, reportList.size)
-    }
-
-    fun setReportInfo2(
-        newReportList: List<ReportItem>,
-        startIndex: Int,
-        endIndex: Int,
-    ) {
-        this.reportList = newReportList
-        Log.d("어댑터 reportList", reportList.get(0).title)
-        notifyItemRangeChanged(3, reportList.size)
+//        notifyItemRangeChanged(startIndex, reportList.size)
+        notifyDataSetChanged()
     }
 
     fun setBookmark(bookmarkList: List<BookmarkResponse>) {
@@ -80,6 +71,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             bookmarkList.any {
                 it.reportId == reportList[position].reportId
             }
+        Log.d("어댑터 bindviewholder bookmarklist", bookmarkList.toString())
         holder.bindBookmarkButton(isBookmarked)
 
         if (itemClick != null) {
@@ -141,7 +133,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             val title = binding.tvTitle
             val content = binding.tvContent
             val replyCount = binding.tvReplyCount
-            val likeCount = binding.tvLikeCount
+            var likeCount = binding.tvLikeCount
             val nickName = binding.tvNickName
             title.text = item.title
             content.text = item.content
@@ -151,6 +143,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {
+            Log.d("어댑터1 bindBookmarkButton", isBookmarked.toString())
             if (isBookmarked) {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
             } else {
@@ -168,7 +161,6 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         }
 
         fun bindLikeImage(isLiked: Boolean) {
-            Log.d("좋아요 어댑터 ", isLiked.toString())
             if (isLiked) {
                 likeButton.setImageResource(R.drawable.ic_like_selected)
             } else {

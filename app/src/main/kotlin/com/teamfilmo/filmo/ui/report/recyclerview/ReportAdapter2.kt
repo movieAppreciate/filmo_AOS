@@ -34,9 +34,9 @@ class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>()
         startIndex: Int,
         endIndex: Int,
     ) {
-        this.reportList = newReportList.subList(startIndex, endIndex)
+        this.reportList = newReportList.subList(startIndex, endIndex + 1)
         Log.d("어댑터 reportList2", reportList.get(0).title)
-        notifyItemRangeChanged(3, reportList.size)
+        notifyDataSetChanged()
     }
 
     fun setBookmark(bookmarkList: List<BookmarkResponse>) {
@@ -133,6 +133,7 @@ class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>()
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {
+            Log.d("어댑터2 bindBookmarkButton", isBookmarked.toString())
             if (isBookmarked) {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
             } else {

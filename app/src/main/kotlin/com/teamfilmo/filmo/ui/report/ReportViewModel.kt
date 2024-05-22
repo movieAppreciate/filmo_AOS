@@ -27,7 +27,10 @@ class ReportViewModel
         val recommendList: LiveData<List<Report>>
             get() = _recommendList
 
-        private var _bookmarkList = MutableLiveData<List<BookmarkResponse>>()
+        private var _bookmarkList =
+            MutableLiveData<List<BookmarkResponse>>().apply {
+                Log.d("뷰모델 _bookmarkList", "업뎃")
+            }
         val bookmarkList: LiveData<List<BookmarkResponse>>
             get() = _bookmarkList
 
@@ -198,7 +201,10 @@ class ReportViewModel
         private suspend fun updateLikeCount(reportId: String) {
             val response = countLike(reportId)
             if (response.isSuccess) {
-                _likeCount.value = reportId to response.getOrDefault(0)
+                Log.d("좋아요 수 뷰모델 업데이트", response.getOrThrow().toString())
+                _likeCount.value = reportId to response.getOrThrow()
+            } else {
+                Log.d("좋아요 수 에러", response.exceptionOrNull().toString())
             }
         }
 
@@ -219,24 +225,22 @@ class ReportViewModel
             return this.shuffled().take(count)
         }
 
-        fun sortRecommendReport() {
+        private fun sortRecommendReport() {
             viewModelScope.launch {
                 Log.d("추천 sort", reportList.toString())
                 val sorted = reportList.sortedBy { it.viewCount.plus(it.likeCount) }
                 Log.d("추천 감상문 sort", sorted.toString())
                 // 좋아요 수 + 조회수를 기준으로 정렬하기
-                if (sorted != null) {
-                    if (sorted.size >= 20) {
-                        sorted.take(20)
-                        sortRecommendList = sorted.getRandomElements(5)
-                        Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
-                    } else if (sorted.size < 5) {
-                        sortRecommendList = sorted
-                        Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
-                    } else {
-                        sortRecommendList = sorted.getRandomElements(5)
-                        Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
-                    }
+                if (sorted.size >= 20) {
+                    sorted.take(20)
+                    sortRecommendList = sorted.getRandomElements(5)
+                    Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
+                } else if (sorted.size < 5) {
+                    sortRecommendList = sorted
+                    Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
+                } else {
+                    sortRecommendList = sorted.getRandomElements(5)
+                    Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
                 }
                 _recommendList.value = sortRecommendList
                 Log.d("결과 뷰모델 sort", _recommendList.value.toString())

@@ -39,10 +39,11 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
 
                     binding.reportRecyclerview2.apply {
                         adapter = reportAdapter2
-                        reportAdapter.setReportInfo2(it, 3, it.lastIndex)
+                        reportAdapter2.setReportInfo(it, 3, it.lastIndex)
                     }
                 }
                 reportViewModel.bookmarkList.value?.let {
+                    reportAdapter2.setBookmark(it)
                     reportAdapter.setBookmark(it)
                 }
                 binding.swiperefresh.isRefreshing = false
@@ -93,34 +94,84 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                     }
                 }
             }
+
+        reportAdapter2.itemClick =
+            object : ReportAdapter2.ItemClick {
+                override fun onClick(
+                    view: View,
+                    position: Int,
+                ) {
+                    Toast.makeText(context, "감상문 클릭", Toast.LENGTH_SHORT).show()
+                    // todo : 본문 페이지로 이동하기
+                }
+
+                override fun onLikeClick(position: Int) {
+                    val report = reportAdapter2.reportList[position]
+                    lifecycleScope.launch {
+                        reportViewModel.toggleLike(report.reportId)
+                    }
+                }
+
+                override fun onBookmarkClick(position: Int) {
+                    val report = reportAdapter2.reportList[position]
+                    lifecycleScope.launch {
+                        reportViewModel.toggleBookmark(report.reportId)
+                    }
+                }
+            }
     }
 
     override fun initObserver() {
         super.initObserver()
 
+   
+
         reportViewModel.likeStatus.observe(viewLifecycleOwner) { (reportId, isLiked) ->
-            val index = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
+            var index = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
+            if (index == -1) {
+                index = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }
+            }
             if (index != -1) {
-                reportAdapter.notifyItemChanged(index, ReportPayload.LikePayload(isLiked))
+                if (index < 3) {
+                    reportAdapter.notifyItemChanged(index, ReportPayload.LikePayload(isLiked))
+                } else {
+                    reportAdapter2.notifyItemChanged(index, ReportPayload.LikePayload(isLiked))
+                }
             }
         }
         reportViewModel.likeCount.observe(viewLifecycleOwner) { (reportId, likeCount) ->
-            val index = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
+            var index = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
+            Log.d("프래그먼트 좋아요 수 index", index.toString())
+            if (index == -1) {
+                index = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }
+            }
             if (index != -1) {
-                reportAdapter.notifyItemChanged(index, ReportPayload.LikeCountPayload(likeCount))
+                if (index < 3) {
+                    reportAdapter.notifyItemChanged(index, ReportPayload.LikeCountPayload(likeCount))
+                } else {
+                    reportAdapter2.notifyItemChanged(index, ReportPayload.LikeCountPayload(likeCount))
+                }
             }
         }
 
         reportViewModel.bookmarkInfo.observe(viewLifecycleOwner) { (reportId, isBookmarked) ->
-            val index = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
-            if (index != -1) {
-                reportAdapter.notifyItemChanged(index, ReportPayload.BookmarkPayload(isBookmarked))
+            var reportIndex = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
+            if (reportIndex == -1) {
+                reportIndex = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }.plus(3)
+            }
+            Log.d("북마크 프래그먼트 reportIndex", reportIndex.toString())
+            if (reportIndex != -1) {
+                Log.d("북마크 프래그먼트 reportIndex", reportIndex.toString())
+                Log.d("북마크 프래그먼트 isBookmakred", isBookmarked.toString())
+                if (reportIndex < 3) {
+                    reportAdapter.notifyItemChanged(reportIndex, ReportPayload.BookmarkPayload(isBookmarked))
+                } else {
+                    reportAdapter2.notifyItemChanged(reportIndex.minus(3), ReportPayload.BookmarkPayload(isBookmarked))
+                }
             }
         }
 
-        reportViewModel.bookmarkList.observe(viewLifecycleOwner) { bookmark ->
-            reportAdapter.setBookmark(bookmark)
-        }
+
         onRefresh()
     }
 }
