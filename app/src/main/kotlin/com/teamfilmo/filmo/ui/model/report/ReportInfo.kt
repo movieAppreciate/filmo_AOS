@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.ui.model
+package com.teamfilmo.filmo.ui.model.report
 
 import kotlinx.serialization.Serializable
 
@@ -18,7 +18,6 @@ data class ReportList(
     val imageUrl: String?,
     val nickname: String,
     val likeCount: Int,
-    val replyCount: Int?,
-    val reportCount: Int,
-    var isLiked: Boolean,
+    val replyCount: Int,
+    val bookmarkCount: Int,
 )

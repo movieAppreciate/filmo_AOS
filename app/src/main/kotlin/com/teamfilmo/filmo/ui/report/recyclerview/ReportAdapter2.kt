@@ -12,15 +12,7 @@ import com.teamfilmo.filmo.databinding.MovieItemBinding
 import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
 import com.teamfilmo.filmo.ui.model.report.ReportItem
 
-sealed class ReportPayload {
-    data class BookmarkPayload(var isBookmarked: Boolean) : ReportPayload()
-
-    data class LikePayload(val isLiked: Boolean) : ReportPayload()
-
-    data class LikeCountPayload(val likeCount: Int) : ReportPayload()
-}
-
-class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
+class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>() {
     private var bookmarkList: List<BookmarkResponse> = listOf()
     var reportList: List<ReportItem> = listOf()
 
@@ -42,18 +34,8 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         startIndex: Int,
         endIndex: Int,
     ) {
-        this.reportList = newReportList.subList(startIndex, endIndex + 1)
-        Log.d("어댑터 reportList", reportList.get(0).title)
-        notifyItemRangeChanged(startIndex, reportList.size)
-    }
-
-    fun setReportInfo2(
-        newReportList: List<ReportItem>,
-        startIndex: Int,
-        endIndex: Int,
-    ) {
-        this.reportList = newReportList
-        Log.d("어댑터 reportList", reportList.get(0).title)
+        this.reportList = newReportList.subList(startIndex, endIndex)
+        Log.d("어댑터 reportList2", reportList.get(0).title)
         notifyItemRangeChanged(3, reportList.size)
     }
 
@@ -120,7 +102,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        Log.d("데이터 size", reportList.size.toString())
+        Log.d("데이터2 size", reportList.size.toString())
         return reportList.size
     }
 

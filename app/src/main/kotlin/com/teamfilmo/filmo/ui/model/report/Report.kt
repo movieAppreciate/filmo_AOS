@@ -1,8 +1,12 @@
-package com.teamfilmo.filmo.ui.model
+package com.teamfilmo.filmo.ui.model.report
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Report(
     val reportId: String,
     val title: String,
+    val content: String,
     val userId: String,
     val movieId: String,
     val tagString: String,

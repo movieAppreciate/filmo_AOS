@@ -27,18 +27,19 @@
                 android:src="@drawable/movieimage" />
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:id="@+id/bookmark_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="right"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitCenter"
-                android:background="@android:color/transparent"
+                android:background="@drawable/ic_bookmark"
                 android:src="@drawable/ic_bookmark"
                 android:tint="#FFFFFF" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_movie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -48,7 +49,7 @@
                 android:textSize="12sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_subtitle"
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -60,7 +61,7 @@
 
 
         <TextView
-            android:id="@+id/tv_review"
+            android:id="@+id/tv_content"
             android:layout_marginHorizontal="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -91,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="뿔테안경이동진 "
+                android:text=""
                 app:layout_constraintBottom_toTopOf="@+id/appCompatTextView"
                 app:layout_constraintStart_toEndOf="@+id/image_user"
                 app:layout_constraintTop_toTopOf="@+id/image_user" />
@@ -112,10 +113,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="64dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_like_unselected"
+                android:src="@drawable/ic_like"
+                android:background="@drawable/ic_like"
                 app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
                 app:layout_constraintTop_toTopOf="@+id/appCompatTextView" />
 
@@ -125,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="8dp"
-                android:text="310"
+                android:text=""
                 app:layout_constraintBottom_toBottomOf="@+id/likeButton"
                 app:layout_constraintEnd_toStartOf="@+id/btn_comment"
                 app:layout_constraintStart_toEndOf="@+id/likeButton"
@@ -150,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="7"
+                android:text=""
                 app:layout_constraintBottom_toBottomOf="@+id/tv_like_count"
                 app:layout_constraintStart_toEndOf="@+id/btn_comment"
                 app:layout_constraintTop_toTopOf="@+id/tv_like_count" />

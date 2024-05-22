@@ -1,10 +1,9 @@
 package com.teamfilmo.filmo.ui.auth
 
 import android.content.Context
+import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -17,6 +16,7 @@ import com.navercorp.nid.profile.data.NidProfileResponse
 import com.teamfilmo.filmo.base.effect.NoEffect
 import com.teamfilmo.filmo.base.event.NoEvent
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.source.UserTokenSource
 import com.teamfilmo.filmo.domain.auth.GoogleLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.KakaoLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.NaverLoginRequestUseCase
@@ -31,15 +31,12 @@ import timber.log.Timber
 class AuthViewModel
     @Inject
     constructor(
+        private val userTokenSource: UserTokenSource,
         private val credentialRequest: GetCredentialRequest,
         private val naverLoginRequestUseCase: NaverLoginRequestUseCase,
         private val googleLoginRequestUseCase: GoogleLoginRequestUseCase,
         private val kakaoLoginRequestUseCase: KakaoLoginRequestUseCase,
     ) : BaseViewModel<NoEffect, NoEvent>() {
-        private val _loginSuccess = MutableLiveData<Boolean>()
-        val loginSuccess: LiveData<Boolean>
-            get() = _loginSuccess
-
         fun requestKakaoLogin(context: Context) {
             launch {
                 runCatching {
@@ -51,7 +48,6 @@ class AuthViewModel
                             } else if (token != null) {
                                 Timber.i("kakao login success, ${token.accessToken}")
                                 continuation.resume(token)
-                                _loginSuccess.value = true
                             }
                         }
 
@@ -88,11 +84,12 @@ class AuthViewModel
 
                 kakaoLoginRequestUseCase(email)
                     .onSuccess {
+                        userTokenSource.setUserToken(it.accessToken)
                         Timber.d("kakao login success")
-                        _loginSuccess.value = true
                     }
                     .onFailure {
                         Timber.e("kakao login failed: ${it.message}")
+                        Log.d("로그인 실패", it.message.toString())
                     }
             }
         }
@@ -107,7 +104,6 @@ class AuthViewModel
                                     override fun onSuccess() {
                                         Timber.d("naver login success, token: ${NaverIdLoginSDK.getAccessToken()}")
                                         continuation.resume(NaverIdLoginSDK.getAccessToken().toString())
-                                        _loginSuccess.value = true
                                     }
 
                                     override fun onFailure(
@@ -179,10 +175,12 @@ class AuthViewModel
 
                 naverLoginRequestUseCase(email)
                     .onSuccess {
+                        userTokenSource.setUserToken(it.accessToken)
                         Timber.d("naver login success")
                     }
                     .onFailure {
                         Timber.e("naver login failed: ${it.message}")
+                        Log.d("로그인 실패", it.message.toString())
                     }
             }
         }
@@ -202,11 +200,12 @@ class AuthViewModel
                 val credential = response.credential
                 googleLoginRequestUseCase(credential)
                     .onSuccess {
+                        userTokenSource.setUserToken(it.accessToken)
                         Timber.d("google login success")
-                        _loginSuccess.value = true
                     }
                     .onFailure {
                         Timber.e("google login failed: ${it.message}")
+                        Log.d("로그인 실패", it.message.toString())
                     }
             }
         }

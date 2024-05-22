@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.network.interceptor
 
+import android.util.Log
 import com.teamfilmo.filmo.data.remote.service.AuthService
 import com.teamfilmo.filmo.data.source.UserTokenSource
 import java.net.HttpURLConnection
@@ -29,6 +30,8 @@ class UserAuthInterceptor(
 
             val accessToken =
                 dataStore.get().getUserToken().firstOrNull()?.let { it.ifEmpty { null } }
+
+            Log.d("로그인 access token", accessToken.toString())
 
             val response = chain.proceedWithToken(request, accessToken)
 
@@ -71,6 +74,7 @@ class UserAuthInterceptor(
         return request
             .newBuilder()
             .apply {
+//                addHeader(AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYW1zYW5nbW9vbiIsInVzZXJJZCI6ImFiYjY3YTZiLTlkYmMtNDNiZi1hMjFjLTc2M2UyMzU3OGI2MyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE3NDM2ODg5ODl9.thWQNAaylBePRisCmcganZSU23ycEZ6UQClYIYbIxMo")
                 if (token.isNullOrBlank().not()) {
                     addHeader(AUTHORIZATION, "Bearer $token")
                 }

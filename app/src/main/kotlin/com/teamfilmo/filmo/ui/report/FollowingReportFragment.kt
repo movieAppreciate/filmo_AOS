@@ -19,19 +19,12 @@ class FollowingReportFragment : Fragment() {
 
     private val reportViewModel by activityViewModels<ReportViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("감상문 프래그먼트 following onCreate", "onCreate")
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentFollowingReportBinding.inflate(inflater, container, false)
-        Log.d("감상문 프래그먼트 following onCreateView", "onCreateView")
-
         return binding.root
     }
 
@@ -40,10 +33,10 @@ class FollowingReportFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("감상문 프래그먼트 following onViewCreated", "onViewCreated")
 
         reportViewModel.report.observe(viewLifecycleOwner) {
                 reportList ->
+            Log.d("감상문 following", reportList.toString())
             if (reportList != null) {
                 val followingReviewAdapter = FollowingReportAdapter()
                 followingReviewAdapter.setFollowingReportList(reportList)
