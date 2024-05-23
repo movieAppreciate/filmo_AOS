@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.ui.report.recyclerview
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +34,6 @@ class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>()
         endIndex: Int,
     ) {
         this.reportList = newReportList.subList(startIndex, endIndex + 1)
-        Log.d("어댑터 reportList2", reportList.get(0).title)
         notifyDataSetChanged()
     }
 
@@ -102,7 +100,6 @@ class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>()
     }
 
     override fun getItemCount(): Int {
-        Log.d("데이터2 size", reportList.size.toString())
         return reportList.size
     }
 
@@ -133,7 +130,6 @@ class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>()
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {
-            Log.d("어댑터2 bindBookmarkButton", isBookmarked.toString())
             if (isBookmarked) {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
             } else {
@@ -151,7 +147,6 @@ class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>()
         }
 
         fun bindLikeImage(isLiked: Boolean) {
-            Log.d("좋아요 어댑터 ", isLiked.toString())
             if (isLiked) {
                 likeButton.setImageResource(R.drawable.ic_like_selected)
             } else {

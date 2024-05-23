@@ -131,7 +131,7 @@
                 app:layout_constraintTop_toTopOf="@+id/likeButton" />
 
             <ImageButton
-                android:id="@+id/btn_comment"
+                android:id="@+id/btn_reply"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="8dp"
@@ -151,7 +151,7 @@
                 android:layout_marginStart="4dp"
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="@+id/tv_like_count"
-                app:layout_constraintStart_toEndOf="@+id/btn_comment"
+                app:layout_constraintStart_toEndOf="@+id/btn_reply"
                 app:layout_constraintTop_toTopOf="@+id/tv_like_count" />
 
 

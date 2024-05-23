@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.ui.report
 
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -30,8 +29,6 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
             lifecycleScope.launch {
                 reportViewModel.requestReport()
                 reportViewModel.report.value?.let {
-                    Log.d("좋아요 새로고림 setReportInfo", "호출")
-
                     binding.reportRecyclerview1.apply {
                         adapter = reportAdapter
                         reportAdapter.setReportInfo(it, 0, 2)
@@ -65,6 +62,8 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                 adapter = reportAdapter
                 reportAdapter.setReportInfo(reportList, 0, 2)
             }
+
+
             binding.reportRecyclerview2.apply {
                 adapter = reportAdapter2
                 reportAdapter2.setReportInfo(reportList, 3, reportList.lastIndex)
@@ -72,10 +71,7 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
         }
         reportAdapter.itemClick =
             object : ReportAdapter.ItemClick {
-                override fun onClick(
-                    view: View,
-                    position: Int,
-                ) {
+                override fun onClick(position: Int) {
                     Toast.makeText(context, "감상문 클릭", Toast.LENGTH_SHORT).show()
                     // todo : 본문 페이지로 이동하기
                 }
@@ -124,32 +120,29 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
     override fun initObserver() {
         super.initObserver()
 
-   
-
         reportViewModel.likeStatus.observe(viewLifecycleOwner) { (reportId, isLiked) ->
-            var index = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
-            if (index == -1) {
-                index = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }
+            var reportIndex = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
+            if (reportIndex == -1) {
+                reportIndex = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }.plus(3)
             }
-            if (index != -1) {
-                if (index < 3) {
-                    reportAdapter.notifyItemChanged(index, ReportPayload.LikePayload(isLiked))
+            if (reportIndex != -1) {
+                if (reportIndex < 3) {
+                    reportAdapter.notifyItemChanged(reportIndex, ReportPayload.LikePayload(isLiked))
                 } else {
-                    reportAdapter2.notifyItemChanged(index, ReportPayload.LikePayload(isLiked))
+                    reportAdapter2.notifyItemChanged(reportIndex.minus(3), ReportPayload.LikePayload(isLiked))
                 }
             }
         }
         reportViewModel.likeCount.observe(viewLifecycleOwner) { (reportId, likeCount) ->
-            var index = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
-            Log.d("프래그먼트 좋아요 수 index", index.toString())
-            if (index == -1) {
-                index = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }
+            var reportIndex = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
+            if (reportIndex == -1) {
+                reportIndex = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }.plus(3)
             }
-            if (index != -1) {
-                if (index < 3) {
-                    reportAdapter.notifyItemChanged(index, ReportPayload.LikeCountPayload(likeCount))
+            if (reportIndex != -1) {
+                if (reportIndex < 3) {
+                    reportAdapter.notifyItemChanged(reportIndex, ReportPayload.LikeCountPayload(likeCount))
                 } else {
-                    reportAdapter2.notifyItemChanged(index, ReportPayload.LikeCountPayload(likeCount))
+                    reportAdapter2.notifyItemChanged(reportIndex.minus(3), ReportPayload.LikeCountPayload(likeCount))
                 }
             }
         }
@@ -159,10 +152,7 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
             if (reportIndex == -1) {
                 reportIndex = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }.plus(3)
             }
-            Log.d("북마크 프래그먼트 reportIndex", reportIndex.toString())
             if (reportIndex != -1) {
-                Log.d("북마크 프래그먼트 reportIndex", reportIndex.toString())
-                Log.d("북마크 프래그먼트 isBookmakred", isBookmarked.toString())
                 if (reportIndex < 3) {
                     reportAdapter.notifyItemChanged(reportIndex, ReportPayload.BookmarkPayload(isBookmarked))
                 } else {
@@ -170,7 +160,6 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                 }
             }
         }
-
 
         onRefresh()
     }

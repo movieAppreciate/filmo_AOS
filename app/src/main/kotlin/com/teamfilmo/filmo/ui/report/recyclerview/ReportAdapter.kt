@@ -2,10 +2,7 @@ package com.teamfilmo.filmo.ui.report.recyclerview
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.databinding.MovieItemBinding
@@ -26,7 +23,6 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
     interface ItemClick {
         fun onClick(
-            view: View,
             position: Int,
         )
 
@@ -44,7 +40,6 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     ) {
         this.reportList = newReportList.subList(startIndex, endIndex + 1)
         Log.d("어댑터 reportList", reportList.get(0).title)
-//        notifyItemRangeChanged(startIndex, reportList.size)
         notifyDataSetChanged()
     }
 
@@ -71,14 +66,8 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             bookmarkList.any {
                 it.reportId == reportList[position].reportId
             }
-        Log.d("어댑터 bindviewholder bookmarklist", bookmarkList.toString())
-        holder.bindBookmarkButton(isBookmarked)
 
-        if (itemClick != null) {
-            holder.itemView.findViewById<ImageView>(R.id.movie_image).setOnClickListener { v ->
-                itemClick?.onClick(v, position)
-            }
-        }
+        holder.bindBookmarkButton(isBookmarked)
     }
 
     override fun onBindViewHolder(
@@ -112,19 +101,27 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        Log.d("데이터 size", reportList.size.toString())
         return reportList.size
     }
 
     inner class ReportViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val likeButton: ImageButton = binding.likeButton
-        private val bookmarkButton: ImageButton = binding.bookmarkButton
-
         init {
-            likeButton.setOnClickListener {
+            binding.movieImage.setOnClickListener {
+                itemClick?.onClick(adapterPosition)
+            }
+            binding.tvTitle.setOnClickListener {
+                itemClick?.onClick(adapterPosition)
+            }
+            binding.tvContent.setOnClickListener {
+                itemClick?.onClick(adapterPosition)
+            }
+            binding.btnReply.setOnClickListener {
+                itemClick?.onClick(adapterPosition)
+            }
+            binding.likeButton.setOnClickListener {
                 itemClick?.onLikeClick(adapterPosition)
             }
-            bookmarkButton.setOnClickListener {
+            binding.bookmarkButton.setOnClickListener {
                 itemClick?.onBookmarkClick(adapterPosition)
             }
         }
@@ -133,26 +130,26 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             val title = binding.tvTitle
             val content = binding.tvContent
             val replyCount = binding.tvReplyCount
-            var likeCount = binding.tvLikeCount
+            val likeCount = binding.tvLikeCount
             val nickName = binding.tvNickName
             title.text = item.title
             content.text = item.content
             replyCount.text = item.replyCount.toString()
             nickName.text = item.nickname
             likeCount.text = item.likeCount.toString()
+
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {
-            Log.d("어댑터1 bindBookmarkButton", isBookmarked.toString())
             if (isBookmarked) {
-                bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
+                binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
             } else {
-                bookmarkButton.setImageResource(R.drawable.ic_bookmark_unselected)
+                binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_unselected)
             }
         }
 
         fun bindLikeButton(imageSrc: Int) {
-            likeButton.setImageResource(imageSrc)
+            binding.likeButton.setImageResource(imageSrc)
         }
 
         fun bindLikeCount(count: Int) {
@@ -162,9 +159,9 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
         fun bindLikeImage(isLiked: Boolean) {
             if (isLiked) {
-                likeButton.setImageResource(R.drawable.ic_like_selected)
+                binding.likeButton.setImageResource(R.drawable.ic_like_selected)
             } else {
-                likeButton.setImageResource(R.drawable.ic_like_unselected)
+                binding.likeButton.setImageResource(R.drawable.ic_like_unselected)
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.ui.report
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,9 +27,7 @@ class ReportViewModel
             get() = _recommendList
 
         private var _bookmarkList =
-            MutableLiveData<List<BookmarkResponse>>().apply {
-                Log.d("뷰모델 _bookmarkList", "업뎃")
-            }
+            MutableLiveData<List<BookmarkResponse>>()
         val bookmarkList: LiveData<List<BookmarkResponse>>
             get() = _bookmarkList
 
@@ -58,15 +55,10 @@ class ReportViewModel
 
         private var reportList: MutableList<Report> = mutableListOf()
 
-        init {
-            Log.d("감상문 뷰모델 init", "init")
-        }
-
         fun toggleBookmark(reportId: String) {
             viewModelScope.launch {
                 _bookmarkList.value = getBookmark() ?: return@launch
                 val bookmark = _bookmarkList.value!!.find { it.reportId == reportId }
-                Log.d("뷰모델 북마크 ", bookmark.toString())
                 if (bookmark != null) {
                     deleteBookmark(bookmark.bookmarkId)
                     _bookmarkInfo.value = reportId to false
@@ -74,6 +66,14 @@ class ReportViewModel
                     registBookmark(reportId)
                 }
             }
+        }
+
+        fun isBookmarked(reportId: String): Boolean {
+            val bookmark =
+                _bookmarkList.value?.find {
+                    it.reportId == reportId
+                }
+            return bookmark != null
         }
 
         private suspend fun registBookmark(reportId: String): Result<BookmarkResponse> {
@@ -142,10 +142,8 @@ class ReportViewModel
                         _report.value = mapForReportItem(response.reportList, likeList)
                         getReportList()
                     } else {
-                        Log.d("likeResult failed", "실패")
                     }
                 } else {
-                    Log.d("뷰모델", "result는 null")
                     result.getOrThrow()
                 }
             }
@@ -154,13 +152,10 @@ class ReportViewModel
         private fun getReportList() {
             viewModelScope.launch {
                 _report.value?.forEach {
-                    Log.d("뷰모델 reportList _report", _report.value.toString())
                     val result = getReport(it.reportId)
                     if (result.isSuccess) {
                         result.getOrNull()?.let { it1 -> reportList.add(it1) }
-                        Log.d("뷰모델 getReportList", reportList.toString())
                     } else {
-                        Log.d("getreportlist 실패", "실패 ${result.exceptionOrNull()}")
                     }
                 }
                 sortRecommendReport()
@@ -178,7 +173,6 @@ class ReportViewModel
 
         private suspend fun registLike(reportId: String): Result<String> {
             _likeStatus.value = reportId to true
-            Log.d("좋아요 등록", _likeStatus.value.toString())
             return reportRepository.registLike(reportId)
         }
 
@@ -194,17 +188,14 @@ class ReportViewModel
 
         private suspend fun cancelLike(reportId: String): Result<String> {
             _likeStatus.value = reportId to false
-            Log.d("좋아요 취소", _likeStatus.value.toString())
             return reportRepository.cancleLike(reportId)
         }
 
         private suspend fun updateLikeCount(reportId: String) {
             val response = countLike(reportId)
             if (response.isSuccess) {
-                Log.d("좋아요 수 뷰모델 업데이트", response.getOrThrow().toString())
                 _likeCount.value = reportId to response.getOrThrow()
             } else {
-                Log.d("좋아요 수 에러", response.exceptionOrNull().toString())
             }
         }
 
@@ -227,23 +218,17 @@ class ReportViewModel
 
         private fun sortRecommendReport() {
             viewModelScope.launch {
-                Log.d("추천 sort", reportList.toString())
                 val sorted = reportList.sortedBy { it.viewCount.plus(it.likeCount) }
-                Log.d("추천 감상문 sort", sorted.toString())
                 // 좋아요 수 + 조회수를 기준으로 정렬하기
                 if (sorted.size >= 20) {
                     sorted.take(20)
                     sortRecommendList = sorted.getRandomElements(5)
-                    Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
                 } else if (sorted.size < 5) {
                     sortRecommendList = sorted
-                    Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
                 } else {
                     sortRecommendList = sorted.getRandomElements(5)
-                    Log.d("뷰모델 recommend sortRecommendList", sortRecommendList.toString())
                 }
                 _recommendList.value = sortRecommendList
-                Log.d("결과 뷰모델 sort", _recommendList.value.toString())
             }
         }
     }
