@@ -2,7 +2,7 @@ package com.teamfilmo.filmo.data.repository
 
 import com.teamfilmo.filmo.data.source.AuthRemoteDataSource
 import com.teamfilmo.filmo.domain.repository.AuthRepository
-import com.teamfilmo.filmo.ui.model.report.AuthResponse
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import javax.inject.Inject
 
 class AuthRepositoryImpl

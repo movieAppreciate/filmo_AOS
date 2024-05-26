@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.data.source
 
-import com.teamfilmo.filmo.ui.model.report.AuthResponse
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 
 interface AuthRemoteDataSource {
     suspend fun signUp(

@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.ui.model.report
+package com.teamfilmo.filmo.ui.model.auth
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable

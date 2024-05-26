@@ -5,7 +5,7 @@ import androidx.credentials.CustomCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.teamfilmo.filmo.domain.repository.AuthRepository
-import com.teamfilmo.filmo.ui.model.report.AuthResponse
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import javax.inject.Inject
 
 class GoogleLoginRequestUseCase

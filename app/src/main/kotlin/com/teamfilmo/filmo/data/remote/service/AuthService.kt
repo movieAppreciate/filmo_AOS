@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.ui.model.report.AuthResponse
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query

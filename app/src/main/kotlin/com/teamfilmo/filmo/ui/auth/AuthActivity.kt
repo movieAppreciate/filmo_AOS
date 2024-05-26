@@ -64,6 +64,7 @@ class AuthActivity
                 }
             binding.notice.movementMethod = LinkMovementMethod.getInstance()
 
+            //todo : viewmodel에서 처리하도록 수정
             lifecycleScope.launch {
                 if (userTokenSource.getUserToken().firstOrNull()?.isNotEmpty() == true) {
                     val intent = Intent(this@AuthActivity, MainPageActivity::class.java)
