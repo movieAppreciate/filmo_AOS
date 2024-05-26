@@ -83,10 +83,12 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             payloads.forEach {
                 when (val payload = it as ReportPayload) {
                     is ReportPayload.BookmarkPayload -> {
+                        Log.d("어댑터", "북마크 payload ${payload.isBookmarked}")
                         holder.bindBookmarkButton(payload.isBookmarked)
                     }
 
                     is ReportPayload.LikePayload -> {
+                        Log.d("어댑터", "좋아요 payload ${payload.isLiked}")
                         this.reportList[position].isLiked = payload.isLiked
                         holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
                     }
@@ -143,6 +145,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {
+            Log.d("북마크 바인딩", isBookmarked.toString())
             if (isBookmarked) {
                 binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
             } else {
@@ -160,6 +163,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         }
 
         fun bindLikeImage(isLiked: Boolean) {
+            Log.d("좋아요 어댑터", isLiked.toString())
             if (isLiked) {
                 binding.likeButton.setImageResource(R.drawable.ic_like_selected)
             } else {

@@ -4,9 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentMovieReportBinding
@@ -105,25 +103,38 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
     override fun initObserver() {
         super.initObserver()
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                reportViewModel.uiState.collect { data ->
+        reportViewModel.likeState.observe(viewLifecycleOwner) { likeState ->
+            Log.d("좋아요 변경", likeState.toString())
 
-                    val index = reportAdapter.reportList.indexOfFirst { it.reportId == data.reportId }
-                    val index2 = reportAdapter2.reportList.indexOfFirst { it.reportId == data.reportId }
-
-                    if (index != -1) {
-                        reportAdapter.notifyItemChanged(index, ReportPayload.LikePayload(data.likeState))
-                        reportAdapter.notifyItemChanged(index, ReportPayload.LikeCountPayload(data.likeCount))
-                        reportAdapter.notifyItemChanged(index, ReportPayload.BookmarkPayload(data.bookmarkState))
-                    } else {
-                        reportAdapter2.notifyItemChanged(index2, ReportPayload.LikePayload(data.likeState))
-                        reportAdapter2.notifyItemChanged(index2, ReportPayload.LikeCountPayload(data.likeCount))
-                        reportAdapter2.notifyItemChanged(index2, ReportPayload.BookmarkPayload(data.bookmarkState))
-                    }
-                }
+            val index = reportAdapter.reportList.indexOfFirst { it.reportId == likeState.reportId }
+            val index2 = reportAdapter2.reportList.indexOfFirst { it.reportId == likeState.reportId }
+            if (index != -1) {
+                reportAdapter.notifyItemChanged(index, ReportPayload.LikePayload(likeState.isLiked))
+            } else {
+                reportAdapter2.notifyItemChanged(index2, ReportPayload.LikePayload(likeState.isLiked))
             }
         }
+
+        reportViewModel.likeCount.observe(viewLifecycleOwner) { likeCount ->
+            Log.d("좋아요 수 변경", likeCount.count.toString())
+            val index = reportAdapter.reportList.indexOfFirst { it.reportId == likeCount.reportId }
+            val index2 = reportAdapter2.reportList.indexOfFirst { it.reportId == likeCount.reportId }
+
+            reportAdapter.notifyItemChanged(index, ReportPayload.LikeCountPayload(likeCount.count))
+        }
+
+        reportViewModel.bookmarkState.observe(viewLifecycleOwner) { bookmarkState ->
+            Log.d("북마크 변경", bookmarkState.isBookmarked.toString())
+            val index = reportAdapter.reportList.indexOfFirst { it.reportId == bookmarkState.reportId }
+            val index2 = reportAdapter2.reportList.indexOfFirst { it.reportId == bookmarkState.reportId }
+
+            if (index != -1) {
+                reportAdapter.notifyItemChanged(index, ReportPayload.BookmarkPayload(bookmarkState.isBookmarked))
+            } else {
+                reportAdapter2.notifyItemChanged(index2, ReportPayload.BookmarkPayload(bookmarkState.isBookmarked))
+            }
+        }
+
         onRefresh()
     }
 }

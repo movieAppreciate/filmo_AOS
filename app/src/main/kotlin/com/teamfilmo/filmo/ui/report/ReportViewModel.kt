@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import com.teamfilmo.filmo.domain.repository.LikeRepository
@@ -19,17 +20,29 @@ import com.teamfilmo.filmo.ui.model.report.ReportItem
 import com.teamfilmo.filmo.ui.model.report.ReportList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class UiState(
+    var reportId: String = "",
+    var isLiked: Boolean = false,
+    var likeCount: Int = 0,
+    val isBookmarked: Boolean = false,
+    val bookmarkCount: Int = 0,
+)
+
+data class LikeState(
     val reportId: String = "",
-    val likeState: Boolean = false,
-    val likeCount: Int = 0,
-    val bookmarkState: Boolean = false,
+    val isLiked: Boolean = false,
+)
+
+data class LikeCount(
+    val reportId: String = "",
+    val count: Int = 0,
+)
+
+data class BookmarkState(
+    val reportId: String = "",
+    val isBookmarked: Boolean = false,
     val bookmarkCount: Int = 0,
 )
 
@@ -43,8 +56,25 @@ class ReportViewModel
         private val bookmarkRepository: BookmarkRepository,
     ) :
     ViewModel() {
-        private val _uiState = MutableStateFlow(UiState())
-        val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+        private val uiState = MutableLiveData<UiState>()
+        val likeState: LiveData<LikeState> =
+            uiState.map {
+                LikeState(it.reportId, it.isLiked)
+            }
+        val likeCount: LiveData<LikeCount> =
+            uiState.map {
+                LikeCount(it.reportId, it.likeCount)
+            }
+
+        val bookmarkState: LiveData<BookmarkState> =
+            uiState.map {
+                BookmarkState(it.reportId, it.isBookmarked)
+            }
+
+        val bookmarkCount: LiveData<Int> =
+            uiState.map {
+                it.bookmarkCount
+            }
 
         private var sortRecommendList: List<Report> = listOf()
         private var _recommendList = MutableLiveData<List<Report>>()
@@ -88,6 +118,7 @@ class ReportViewModel
             viewModelScope.launch {
                 getBookmarkResponse()
                 val bookmark = _bookmarkList.value?.find { it.reportId == reportId }
+                Log.d("북마크 토글", bookmark.toString())
                 if (bookmark != null) {
                     deleteBookmark(bookmark.bookmarkId)
                 } else {
@@ -97,12 +128,13 @@ class ReportViewModel
         }
 
         private suspend fun registBookmark(reportId: String): Result<BookmarkResponse> {
-            _uiState.update { currentState ->
+            val currentState = uiState.value ?: UiState()
+            val newState =
                 currentState.copy(
                     reportId = reportId,
-                    bookmarkState = true,
+                    isBookmarked = true,
                 )
-            }
+            uiState.value = newState
             return bookmarkRepository.registBookmark(reportId)
         }
 
@@ -122,11 +154,13 @@ class ReportViewModel
         }
 
         private suspend fun deleteBookmark(bookmarkId: Int): Result<String> {
-            _uiState.update { currentState ->
+            val currentState = uiState.value ?: UiState()
+            val newState =
                 currentState.copy(
-                    bookmarkState = false,
+                    isBookmarked = false,
                 )
-            }
+            uiState.value = newState
+
             return bookmarkRepository.deleteBookmark(bookmarkId)
         }
 
@@ -195,23 +229,25 @@ class ReportViewModel
         }
 
         private suspend fun registLike(reportId: String): Result<String> {
-            _uiState.update { currentState ->
+            val currentState = uiState.value ?: UiState()
+            val newState =
                 currentState.copy(
-                    likeState = true,
                     reportId = reportId,
+                    isLiked = true,
                 )
-            }
+            uiState.value = newState
             Log.d("좋아요 뷰모델", "$reportId 좋아요 등록")
             return likeRepository.registLike(reportId)
         }
 
         private suspend fun cancelLike(reportId: String): Result<String> {
-            _uiState.update { currentState ->
+            val currentState = uiState.value ?: UiState()
+            val newState =
                 currentState.copy(
-                    likeState = false,
                     reportId = reportId,
+                    isLiked = false,
                 )
-            }
+            uiState.value = newState
             Log.d("좋아요 뷰모델", "취소")
             return likeRepository.cancleLike(reportId)
         }
@@ -219,11 +255,13 @@ class ReportViewModel
         private suspend fun updateLikeCount(reportId: String) {
             val response = countLike(reportId)
             if (response.isSuccess) {
-                _uiState.update { currentState ->
+                val currentState = uiState.value ?: UiState()
+                val newState =
                     currentState.copy(
+                        reportId = reportId,
                         likeCount = response.getOrThrow(),
                     )
-                }
+                uiState.value = newState
             } else {
                 Log.d("update like count failed", response.exceptionOrNull().toString())
             }
