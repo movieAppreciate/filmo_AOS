@@ -74,7 +74,6 @@ class UserAuthInterceptor(
         return request
             .newBuilder()
             .apply {
-//                addHeader(AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYW1zYW5nbW9vbiIsInVzZXJJZCI6ImFiYjY3YTZiLTlkYmMtNDNiZi1hMjFjLTc2M2UyMzU3OGI2MyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE3NDM2ODg5ODl9.thWQNAaylBePRisCmcganZSU23ycEZ6UQClYIYbIxMo")
                 if (token.isNullOrBlank().not()) {
                     addHeader(AUTHORIZATION, "Bearer $token")
                 }

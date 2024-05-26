@@ -8,229 +8,220 @@
         android:layout_height="match_parent">
 
         <HorizontalScrollView
-            android:layout_margin="10dp"
             android:id="@+id/horizontalScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="10dp"
             app:layout_constraintBottom_toTopOf="@id/swiperefresh"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/sf"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="SF"
-                    android:clickable="true"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:background="@drawable/custom_button"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    android:focusable="true" />
+                    android:textColor="@drawable/txt_selector"
+                    android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/tv_movie"
                     android:layout_width="75dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="TV 영화"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/family"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="가족"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/horror"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="공포"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/documentary"
                     android:layout_width="85dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="다큐멘터리"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/drama"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
+                    android:backgroundTint="@null"
                     android:text="드라마"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/romance"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minHeight="0dp"
-                    android:textColor="@color/black"
+                    android:background="@drawable/custom_button_selector"
                     android:text="로맨스"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/adventure"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="모험"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/mystery"
                     android:layout_width="75dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="미스테리"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/crime"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:textColor="@color/black"
-                    android:minHeight="0dp"
-
+                    android:background="@drawable/custom_button_selector"
                     android:text="범죄"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/western"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:textColor="@color/black"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="서부"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/thriller"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minHeight="0dp"
-                    android:textColor="@color/black"
+                    android:background="@drawable/custom_button_selector"
                     android:text="스릴러"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/animation"
                     android:layout_width="85dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:textColor="@color/black"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
+
                     android:text="애니메이션"
+
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/action"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-
-                    android:background="@drawable/custom_button"
+                    android:background="@drawable/custom_button_selector"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="액션"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/history"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
+
                     android:text="역사"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/music"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
+                    android:background="@drawable/custom_button_selector"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="음악"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/war"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
+                    android:background="@drawable/custom_button_selector"
                     android:text="전쟁"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/comedy"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
-                    android:minHeight="0dp"
+                    android:backgroundTint="@drawable/custom_button_selector"
                     android:text="코미디"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/fantasy"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/custom_button"
+                    android:background="@drawable/custom_button_selector"
                     android:minHeight="0dp"
                     android:text="판타지"
-                    android:textColor="@color/black"
+                    android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
 

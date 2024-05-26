@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.ui.report
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -45,25 +44,5 @@ class FollowingReportFragment : Fragment() {
                 binding.followReviewRecyclerview.adapter = followingReviewAdapter
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("감상문 프래그먼트 following onDestroy", "onDestroy")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("감상문 프래그먼트 following onDestroyView", "onDestroyView")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.d("감상문 프래그먼트 following onAttach", "onAttach")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("감상문 프래그먼트 following onresume", "resume")
     }
 }

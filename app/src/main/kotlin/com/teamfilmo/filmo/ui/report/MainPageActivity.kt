@@ -33,7 +33,7 @@ class MainPageActivity :
 
         lifecycleScope.launch {
             reportViewModel.requestReport()
-            reportViewModel.getBookmark()
+            reportViewModel.getBookmarkResponse()
         }
 
         if (savedInstanceState == null) {

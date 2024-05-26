@@ -18,7 +18,7 @@ sealed class ReportPayload {
 }
 
 class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
-    private var bookmarkList: List<BookmarkResponse> = listOf()
+    private var bookmarkList: List<BookmarkResponse> = mutableListOf()
     var reportList: List<ReportItem> = listOf()
 
     interface ItemClick {
@@ -39,8 +39,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         endIndex: Int,
     ) {
         this.reportList = newReportList.subList(startIndex, endIndex + 1)
-        Log.d("어댑터 reportList", reportList.get(0).title)
-        notifyDataSetChanged()
+        notifyItemRangeChanged(startIndex, 3)
     }
 
     fun setBookmark(bookmarkList: List<BookmarkResponse>) {
@@ -62,12 +61,15 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     ) {
         holder.bindItems(reportList[position])
         holder.bindLikeImage(reportList[position].isLiked)
+        holder.bindLikeCount(reportList[position].likeCount)
+
         val isBookmarked =
             bookmarkList.any {
                 it.reportId == reportList[position].reportId
             }
 
         holder.bindBookmarkButton(isBookmarked)
+        // todo : likecount 로직 추가하기
     }
 
     override fun onBindViewHolder(
@@ -90,6 +92,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
                     }
 
                     is ReportPayload.LikeCountPayload -> {
+                        this.reportList[position].likeCount = payload.likeCount
                         holder.bindLikeCount(payload.likeCount)
                     }
 
@@ -137,7 +140,6 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             replyCount.text = item.replyCount.toString()
             nickName.text = item.nickname
             likeCount.text = item.likeCount.toString()
-
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {

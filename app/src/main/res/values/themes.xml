@@ -2,7 +2,7 @@
 <resources>
     <!-- Base application theme. -->
 
-    <style name="Theme.Filmo" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
+    <style name="Theme.Filmo" parent="Theme.AppCompat.DayNight.NoActionBar"/>
         <!--        <item name="textAppearanceHeadingLarge">@style/TextAppearance.AppCompat.Heading.lg</item>-->
         <!--        <item name="textAppearanceHeadingMedium">@style/TextAppearance.AppCompat.Heading.md</item>-->
         <!--        <item name="textAppearanceHeadingSmall">@style/TextAppearance.AppCompat.Heading.sm</item>-->

@@ -8,7 +8,7 @@ data class Report(
     val title: String,
     val content: String,
     val userId: String,
-    val movieId: String,
+    val movieId: Int,
     val tagString: String,
     val complaintCount: Int,
     val replyCount: Int,

@@ -1,10 +1,12 @@
 package com.teamfilmo.filmo.ui.report
 
-import android.view.View
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentMovieReportBinding
@@ -20,7 +22,7 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
     val reportAdapter by lazy {
         ReportAdapter()
     }
-    val reportAdapter2 by lazy {
+    private val reportAdapter2 by lazy {
         ReportAdapter2()
     }
 
@@ -33,15 +35,14 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                         adapter = reportAdapter
                         reportAdapter.setReportInfo(it, 0, 2)
                     }
-
                     binding.reportRecyclerview2.apply {
                         adapter = reportAdapter2
                         reportAdapter2.setReportInfo(it, 3, it.lastIndex)
                     }
                 }
                 reportViewModel.bookmarkList.value?.let {
-                    reportAdapter2.setBookmark(it)
                     reportAdapter.setBookmark(it)
+                    reportAdapter2.setBookmark(it)
                 }
                 binding.swiperefresh.isRefreshing = false
             }
@@ -55,14 +56,23 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
             setReorderingAllowed(true)
             add(R.id.recommend_fragment_container_view, RecommendReportFragment())
         }
+        reportViewModel.bookmarkList.observe(viewLifecycleOwner) { bookmarkList ->
+            binding.reportRecyclerview1.apply {
+                adapter = reportAdapter
+                reportAdapter.setBookmark(bookmarkList)
+            }
+
+            binding.reportRecyclerview2.apply {
+                adapter = reportAdapter2
+                reportAdapter2.setBookmark(bookmarkList)
+            }
+        }
 
         reportViewModel.report.observe(viewLifecycleOwner) { reportList ->
-
             binding.reportRecyclerview1.apply {
                 adapter = reportAdapter
                 reportAdapter.setReportInfo(reportList, 0, 2)
             }
-
 
             binding.reportRecyclerview2.apply {
                 adapter = reportAdapter2
@@ -79,7 +89,7 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                 override fun onLikeClick(position: Int) {
                     val report = reportAdapter.reportList[position]
                     lifecycleScope.launch {
-                        reportViewModel.toggleLike(report.reportId)
+                        reportViewModel.updateLike(report.reportId)
                     }
                 }
 
@@ -90,77 +100,30 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                     }
                 }
             }
-
-        reportAdapter2.itemClick =
-            object : ReportAdapter2.ItemClick {
-                override fun onClick(
-                    view: View,
-                    position: Int,
-                ) {
-                    Toast.makeText(context, "감상문 클릭", Toast.LENGTH_SHORT).show()
-                    // todo : 본문 페이지로 이동하기
-                }
-
-                override fun onLikeClick(position: Int) {
-                    val report = reportAdapter2.reportList[position]
-                    lifecycleScope.launch {
-                        reportViewModel.toggleLike(report.reportId)
-                    }
-                }
-
-                override fun onBookmarkClick(position: Int) {
-                    val report = reportAdapter2.reportList[position]
-                    lifecycleScope.launch {
-                        reportViewModel.toggleBookmark(report.reportId)
-                    }
-                }
-            }
     }
 
     override fun initObserver() {
         super.initObserver()
 
-        reportViewModel.likeStatus.observe(viewLifecycleOwner) { (reportId, isLiked) ->
-            var reportIndex = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
-            if (reportIndex == -1) {
-                reportIndex = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }.plus(3)
-            }
-            if (reportIndex != -1) {
-                if (reportIndex < 3) {
-                    reportAdapter.notifyItemChanged(reportIndex, ReportPayload.LikePayload(isLiked))
-                } else {
-                    reportAdapter2.notifyItemChanged(reportIndex.minus(3), ReportPayload.LikePayload(isLiked))
-                }
-            }
-        }
-        reportViewModel.likeCount.observe(viewLifecycleOwner) { (reportId, likeCount) ->
-            var reportIndex = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
-            if (reportIndex == -1) {
-                reportIndex = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }.plus(3)
-            }
-            if (reportIndex != -1) {
-                if (reportIndex < 3) {
-                    reportAdapter.notifyItemChanged(reportIndex, ReportPayload.LikeCountPayload(likeCount))
-                } else {
-                    reportAdapter2.notifyItemChanged(reportIndex.minus(3), ReportPayload.LikeCountPayload(likeCount))
-                }
-            }
-        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                reportViewModel.uiState.collect { data ->
 
-        reportViewModel.bookmarkInfo.observe(viewLifecycleOwner) { (reportId, isBookmarked) ->
-            var reportIndex = reportAdapter.reportList.indexOfFirst { it.reportId == reportId }
-            if (reportIndex == -1) {
-                reportIndex = reportAdapter2.reportList.indexOfFirst { it.reportId == reportId }.plus(3)
-            }
-            if (reportIndex != -1) {
-                if (reportIndex < 3) {
-                    reportAdapter.notifyItemChanged(reportIndex, ReportPayload.BookmarkPayload(isBookmarked))
-                } else {
-                    reportAdapter2.notifyItemChanged(reportIndex.minus(3), ReportPayload.BookmarkPayload(isBookmarked))
+                    val index = reportAdapter.reportList.indexOfFirst { it.reportId == data.reportId }
+                    val index2 = reportAdapter2.reportList.indexOfFirst { it.reportId == data.reportId }
+
+                    if (index != -1) {
+                        reportAdapter.notifyItemChanged(index, ReportPayload.LikePayload(data.likeState))
+                        reportAdapter.notifyItemChanged(index, ReportPayload.LikeCountPayload(data.likeCount))
+                        reportAdapter.notifyItemChanged(index, ReportPayload.BookmarkPayload(data.bookmarkState))
+                    } else {
+                        reportAdapter2.notifyItemChanged(index2, ReportPayload.LikePayload(data.likeState))
+                        reportAdapter2.notifyItemChanged(index2, ReportPayload.LikeCountPayload(data.likeCount))
+                        reportAdapter2.notifyItemChanged(index2, ReportPayload.BookmarkPayload(data.bookmarkState))
+                    }
                 }
             }
         }
-
         onRefresh()
     }
 }

@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -30,8 +31,8 @@ interface MovieService {
          * 영화 아이디
          */
         @Query("movieId")
-        movieId: String,
-    ): Result<String>
+        movieId: Int,
+    ): Result<DetailMovieResponse>
 
     /**
      * 영화 관련 동영상 조회
@@ -42,7 +43,7 @@ interface MovieService {
          * 영화 아이디
          */
         @Query("movieId")
-        movieId: String,
+        movieId: Int,
     ): Result<String>
 
     /**
@@ -54,6 +55,6 @@ interface MovieService {
          * 영화 아이디
          */
         @Query("movieId")
-        movieId: String,
+        movieId: Int,
     ): Result<String>
 }
