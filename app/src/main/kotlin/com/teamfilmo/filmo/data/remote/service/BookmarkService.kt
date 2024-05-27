@@ -1,5 +1,7 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
 import com.teamfilmo.filmo.ui.model.bookmark.BookmarkCount
 import com.teamfilmo.filmo.ui.model.bookmark.BookmarkList
 import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
@@ -30,6 +32,8 @@ interface BookmarkService {
          * 마지막으로 조회된 북마크 아이디, 최초는 빈값
          */
         @Query("bookmarkId")
+        bookmarkId: String? = null,
+    ): Result<BookmarkListResponse>
         bookmarkId: Int? = null,
     ): Result<BookmarkList>
 
@@ -55,5 +59,5 @@ interface BookmarkService {
          */
         @Query("bookmarkId")
         bookmarkId: Int,
-    ): Result<String>
+    ): Result<Unit>
 }
