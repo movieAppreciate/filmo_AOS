@@ -1,5 +1,8 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
+import com.teamfilmo.filmo.data.remote.model.user.RefreshResponse
+import com.teamfilmo.filmo.data.remote.model.user.SignUpResponse
 import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -27,7 +30,7 @@ interface AuthService {
          */
         @Query("profileUrl")
         profileUrl: String? = null,
-    ): Result<String>
+    ): Result<SignUpResponse>
 
     /**
      * 로그인
@@ -46,6 +49,7 @@ interface AuthService {
         @Query("type")
         type: String,
     ): Result<AuthResponse>
+    ): Result<LoginResponse>
 
     /**
      * 토큰 재발급
@@ -62,5 +66,5 @@ interface AuthService {
          */
         @Query("refreshToken")
         refreshToken: String,
-    ): Result<String>
+    ): Result<RefreshResponse>
 }

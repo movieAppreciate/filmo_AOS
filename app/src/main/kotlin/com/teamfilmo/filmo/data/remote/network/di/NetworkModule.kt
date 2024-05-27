@@ -51,12 +51,21 @@ object NetworkModule {
     fun provideContentType(): String = "application/json"
 
     @Provides
+    fun provideJson(): Json =
+        Json {
+            encodeDefaults = true
+            prettyPrint = true
+            ignoreUnknownKeys = true
+        }
+
+    @Provides
     @Singleton
     fun provideRetrofit(
         @BaseUrl baseUrl: String,
         @RetryCount retryCount: Int,
         okHttpClient: OkHttpClient,
         @ContentType contentType: String,
+        json: Json,
     ): Retrofit {
         val contentType = contentType.toMediaType()
         val jsonConfig = Json { ignoreUnknownKeys = true }
@@ -65,7 +74,7 @@ object NetworkModule {
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addCallAdapterFactory(ResultCallAdapter.Factory(retryCount))
-            .addConverterFactory(jsonConfig.asConverterFactory(contentType))
+            .addConverterFactory(json.asConverterFactory(contentType.toMediaType()))
             .build()
     }
 }
