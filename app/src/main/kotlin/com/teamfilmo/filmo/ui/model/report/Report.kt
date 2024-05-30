@@ -2,6 +2,9 @@ package com.teamfilmo.filmo.ui.model.report
 
 import kotlinx.serialization.Serializable
 
+/*
+개별 감상문 조회 시 돌아오는 응답 형태
+ */
 @Serializable
 data class Report(
     val reportId: String,

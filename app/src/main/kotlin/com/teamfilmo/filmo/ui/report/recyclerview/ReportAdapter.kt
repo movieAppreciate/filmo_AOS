@@ -19,7 +19,7 @@ sealed class ReportPayload {
 
 class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     private var bookmarkList: List<BookmarkResponse> = mutableListOf()
-    var reportList: List<ReportItem> = listOf()
+    var reportList: ArrayList<ReportItem> = arrayListOf()
 
     interface ItemClick {
         fun onClick(
@@ -38,13 +38,17 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         startIndex: Int,
         endIndex: Int,
     ) {
-        this.reportList = newReportList.subList(startIndex, endIndex + 1)
-        notifyItemRangeChanged(startIndex, 3)
+        val list = newReportList.subList(startIndex, endIndex + 1)
+        val currentSize = reportList.size
+        reportList.clear()
+        reportList.addAll(list)
+        notifyItemRangeRemoved(startIndex, currentSize)
+        notifyItemRangeInserted(startIndex, reportList.size)
     }
 
     fun setBookmark(bookmarkList: List<BookmarkResponse>) {
         this.bookmarkList = bookmarkList
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, this.bookmarkList.size)
     }
 
     override fun onCreateViewHolder(
@@ -106,6 +110,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     }
 
     override fun getItemCount(): Int {
+        Log.d("리사이클러뷰 어댑터 데이터 사이즈", reportList.size.toString())
         return reportList.size
     }
 
@@ -171,4 +176,8 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             }
         }
     }
+
+    /*
+    감상문 필터를 위함
+     */
 }

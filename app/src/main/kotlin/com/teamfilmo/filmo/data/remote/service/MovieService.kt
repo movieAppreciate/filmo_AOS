@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.data.remote.service
 
 import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
+import com.teamfilmo.filmo.ui.model.movie.MovieResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -20,7 +21,7 @@ interface MovieService {
          */
         @Query("page")
         page: Int = 1,
-    ): Result<String>
+    ): Result<MovieResponse>
 
     /**
      * 영화 상세 정보 검색

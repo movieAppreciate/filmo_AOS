@@ -1,12 +1,13 @@
 package com.teamfilmo.filmo.domain.repository
 
 import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
+import com.teamfilmo.filmo.ui.model.movie.MovieResponse
 
 interface MovieRepository {
     suspend fun searchList(
         query: String,
         page: Int,
-    ): Result<String>
+    ): Result<MovieResponse>
 
     suspend fun searchDetail(movieId: Int): Result<DetailMovieResponse>
 

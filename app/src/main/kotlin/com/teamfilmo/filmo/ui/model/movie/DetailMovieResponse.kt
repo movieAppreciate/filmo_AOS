@@ -33,8 +33,6 @@ data class DetailMovieResponse(
     val productionCompanies: List<ProductionCompany>,
     @SerialName("production_countries")
     val productionCountries: List<ProductionCountry>,
-    @SerialName("providers")
-    val providers: MovieProviders,
     @SerialName("release_date")
     val releaseDate: String,
     @SerialName("revenue")
@@ -83,36 +81,6 @@ data class ProductionCountry(
     val iso31661: String,
     @SerialName("name")
     val name: String,
-)
-
-@Serializable(with = MovieSerializer::class)
-sealed class MovieProviders {
-    @Serializable
-    data class Providers1(
-        @SerialName("link") val link: String,
-        @SerialName("flatrate") val flatrate: List<Info>?,
-        @SerialName("buy") val buy: List<Info>?,
-        @SerialName("rent") val rent: List<Info>?,
-    ) : MovieProviders()
-
-    @Serializable
-    data class Providers2(
-        @SerialName("link") val link: String,
-        @SerialName("ads") val ads: List<Info>?,
-        @SerialName("free") val free: List<Info>?,
-    ) : MovieProviders()
-}
-
-@Serializable
-data class Info(
-    @SerialName("logo_path")
-    val logoPath: String,
-    @SerialName("provider_id")
-    val providerId: Int,
-    @SerialName("provider_name")
-    val providerName: String,
-    @SerialName("display_priority")
-    val displayPriority: Int,
 )
 
 @Serializable

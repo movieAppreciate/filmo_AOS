@@ -24,6 +24,7 @@
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/sf"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
@@ -34,6 +35,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/tv_movie"
                     android:layout_width="75dp"
                     android:layout_height="30dp"
@@ -44,6 +46,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/family"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -54,6 +57,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/horror"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -64,6 +68,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/documentary"
                     android:layout_width="85dp"
                     android:layout_height="30dp"
@@ -74,6 +79,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/drama"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
@@ -85,6 +91,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/romance"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
@@ -97,6 +104,7 @@
 
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/adventure"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -106,6 +114,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/mystery"
                     android:layout_width="75dp"
                     android:layout_height="30dp"
@@ -116,6 +125,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/crime"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -126,6 +136,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/western"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -136,6 +147,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/thriller"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
@@ -147,6 +159,7 @@
 
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/animation"
                     android:layout_width="85dp"
                     android:layout_height="30dp"
@@ -159,6 +172,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/action"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -171,6 +185,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/history"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -182,6 +197,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/music"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -194,6 +210,7 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/war"
                     android:layout_width="55dp"
                     android:layout_height="30dp"
@@ -204,16 +221,18 @@
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/comedy"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
-                    android:backgroundTint="@drawable/custom_button_selector"
+                    android:background="@drawable/custom_button_selector"
                     android:text="코미디"
                     android:textColor="@drawable/txt_selector"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/fantasy"
                     android:layout_width="65dp"
                     android:layout_height="30dp"
@@ -249,7 +268,7 @@
                     android:layout_height="match_parent">
 
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    sreawe<androidx.recyclerview.widget.RecyclerView
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:id="@+id/report_recyclerview1"
                         android:layout_width="match_parent"

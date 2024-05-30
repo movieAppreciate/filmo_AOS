@@ -14,6 +14,7 @@ import com.teamfilmo.filmo.ui.model.bookmark.BookmarkCount
 import com.teamfilmo.filmo.ui.model.bookmark.BookmarkList
 import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
 import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
+import com.teamfilmo.filmo.ui.model.movie.MovieResponse
 import com.teamfilmo.filmo.ui.model.report.Report
 import com.teamfilmo.filmo.ui.model.report.ReportInfo
 import com.teamfilmo.filmo.ui.model.report.ReportItem
@@ -33,11 +34,7 @@ data class UiState(
 data class LikeState(
     val reportId: String = "",
     val isLiked: Boolean = false,
-)
-
-data class LikeCount(
-    val reportId: String = "",
-    val count: Int = 0,
+    val likeCount: Int = 0,
 )
 
 data class BookmarkState(
@@ -56,24 +53,18 @@ class ReportViewModel
         private val bookmarkRepository: BookmarkRepository,
     ) :
     ViewModel() {
+        private var genreIdList = listOf<String>()
         private val uiState = MutableLiveData<UiState>()
+
+
         val likeState: LiveData<LikeState> =
             uiState.map {
-                LikeState(it.reportId, it.isLiked)
-            }
-        val likeCount: LiveData<LikeCount> =
-            uiState.map {
-                LikeCount(it.reportId, it.likeCount)
+                LikeState(it.reportId, it.isLiked, it.likeCount)
             }
 
         val bookmarkState: LiveData<BookmarkState> =
             uiState.map {
                 BookmarkState(it.reportId, it.isBookmarked)
-            }
-
-        val bookmarkCount: LiveData<Int> =
-            uiState.map {
-                it.bookmarkCount
             }
 
         private var sortRecommendList: List<Report> = listOf()
@@ -90,14 +81,13 @@ class ReportViewModel
 
         private var _report =
             MutableLiveData<List<ReportItem>>()
+
         val report: LiveData<List<ReportItem>>
             get() = _report
 
         private var reportList: MutableList<Report> = mutableListOf()
-
-        private var _filteredReportList = MutableLiveData<MutableList<Report>>()
-        val filteredReportList: LiveData<MutableList<Report>>
-            get() = _filteredReportList
+        private var _filteredReportList = MutableLiveData<List<ReportItem>>()
+        val filteredReportList: LiveData<List<ReportItem>> get() = _filteredReportList
 
         fun updateLike(reportId: String) {
             viewModelScope.launch {
@@ -138,6 +128,13 @@ class ReportViewModel
             return bookmarkRepository.registBookmark(reportId)
         }
 
+        suspend fun searchMovieList(movie: String): Result<MovieResponse> {
+            return movieRepository.searchList(movie, 1)
+        }
+
+    /*
+    북마크
+     */
         suspend fun getBookmarkResponse() {
             val result = getBookmark()
             if (result.isSuccess) {
@@ -164,6 +161,9 @@ class ReportViewModel
             return bookmarkRepository.deleteBookmark(bookmarkId)
         }
 
+    /*
+    감상문
+     */
         private suspend fun searchReport(): Result<ReportInfo> {
             return reportRepository.searchReport()
         }
@@ -184,8 +184,16 @@ class ReportViewModel
                     replyCount = reportItem.replyCount,
                     bookmarkCount = reportItem.bookmarkCount,
                     isLiked = likeList[index],
+                    genreIds = genreIdList,
                 )
             }
+        }
+
+        private fun mapForMovieItem(
+            reportId: String,
+            movie: String,
+            genreList: List<String>,
+        ) {
         }
 
         fun requestReport() {
@@ -200,8 +208,10 @@ class ReportViewModel
                                 likeResult.getOrNull()?.let { isLiked ->
                                     likeList.add(isLiked)
                                 }
+                                getGenre(it.reportId)
                             }
                         }
+
                         _report.value = mapForReportItem(response.reportList, likeList)
                         getReportList()
                     }
@@ -228,6 +238,9 @@ class ReportViewModel
             return reportRepository.getReport(reportId)
         }
 
+    /*
+    좋아요
+     */
         private suspend fun registLike(reportId: String): Result<String> {
             val currentState = uiState.value ?: UiState()
             val newState =
@@ -304,26 +317,41 @@ class ReportViewModel
     장르 버튼 기능 구현
      */
         suspend fun filterGenreReport(genre: String) {
-            var newList = mutableListOf<Report>()
-            reportList.forEach { report ->
-                val result = searchMovieDetail(report.movieId)
+            val list = mutableListOf<ReportItem>()
+            reportList.forEach { item ->
+                val report = _report.value?.find { it.reportId == item.reportId }
+                val result = searchMovieDetail(item.movieId)
                 if (result.isSuccess) {
-                    result.getOrNull().apply {
-                        Log.d("뷰모델 filter genre result 확인", result.getOrThrow().toString())
-                        val isGenre = this?.genres?.find { it.name == genre }
-                        Log.d("isGenre", isGenre.toString())
-//                        if (isGenre) {
-//                            newList.add(report)
-//                            Log.d("뷰모델 filter genre true", isGenre.toString())
-//                        } else {
-//                            Log.d("뷰모델 filter genre else ", isGenre.toString())
-//                        }
+                    result.getOrThrow().apply {
+                        val filteredItem = this.genres.find { it.name == genre }
+
+                        if (filteredItem != null) {
+                            if (report != null) {
+                                list.add(report)
+                            }
+                        }
                     }
                 } else {
                     Log.d("filter 실패", result.exceptionOrNull().toString())
                 }
             }
-            _filteredReportList.value?.addAll(newList)
+            _filteredReportList.value = list
+        }
+
+        private fun getGenre(reportId: String) {
+            val movieId = reportList.find { it.reportId == reportId }?.movieId
+            val list = mutableListOf<String>()
+            viewModelScope.launch {
+                val result = movieId?.let { searchMovieDetail(it) }
+                if (result != null) {
+                    if (result.isSuccess) {
+                        result.getOrThrow().genres.forEach {
+                            list.add(it.name)
+                        }
+                    }
+                }
+                genreIdList = list
+            }
         }
 
         private suspend fun searchMovieDetail(movieId: Int): Result<DetailMovieResponse> {
