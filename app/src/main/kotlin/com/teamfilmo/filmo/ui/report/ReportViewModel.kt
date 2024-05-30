@@ -54,8 +54,7 @@ class ReportViewModel
     ) :
     ViewModel() {
         private var genreIdList = listOf<String>()
-        private val uiState = MutableLiveData<UiState>()
-
+        val uiState = MutableLiveData<UiState>()
 
         val likeState: LiveData<LikeState> =
             uiState.map {
@@ -107,12 +106,15 @@ class ReportViewModel
         fun toggleBookmark(reportId: String) {
             viewModelScope.launch {
                 getBookmarkResponse()
-                val bookmark = _bookmarkList.value?.find { it.reportId == reportId }
-                Log.d("북마크 토글", bookmark.toString())
-                if (bookmark != null) {
-                    deleteBookmark(bookmark.bookmarkId)
-                } else {
-                    registBookmark(reportId)
+                if (_bookmarkList.value != null) {
+                    val bookmark = _bookmarkList.value?.find { it.reportId == reportId }
+                    Log.d("북마크 토글", bookmark.toString())
+                    if (bookmark != null) {
+                        deleteBookmark(bookmark.bookmarkId)
+                    } else {
+                        registBookmark(reportId)
+                    }
+                    getBookmarkResponse()
                 }
             }
         }
@@ -125,6 +127,7 @@ class ReportViewModel
                     isBookmarked = true,
                 )
             uiState.value = newState
+            Log.d("ui state 북마크 변경", uiState.value.toString())
             return bookmarkRepository.registBookmark(reportId)
         }
 

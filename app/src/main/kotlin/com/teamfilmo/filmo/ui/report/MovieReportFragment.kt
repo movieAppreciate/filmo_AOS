@@ -35,7 +35,6 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                         visibility = View.VISIBLE
                         adapter = reportAdapter
                         reportAdapter.setReportInfo(it, 0, 2)
-                        layoutManager
                     }
                     binding.reportRecyclerview2.apply {
                         visibility = View.VISIBLE
@@ -112,6 +111,10 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
     override fun initObserver() {
         super.initObserver()
 
+        reportViewModel.uiState.observe(viewLifecycleOwner) { uistate ->
+            Log.d("ui state 변경", uistate.toString())
+        }
+
         reportViewModel.likeState.observe(viewLifecycleOwner) { likeState ->
             Log.d("좋아요 변경", likeState.toString())
 
@@ -128,8 +131,8 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
 
         reportViewModel.bookmarkState.observe(viewLifecycleOwner) { bookmarkState ->
             Log.d("북마크 변경", bookmarkState.isBookmarked.toString())
-            val index = reportAdapter.reportList.indexOfFirst { it.reportId == bookmarkState.reportId }
-            val index2 = reportAdapter2.reportList.indexOfFirst { it.reportId == bookmarkState.reportId }
+            val index = reportAdapter.bookmarkList.indexOfFirst { it.reportId == bookmarkState.reportId }
+            val index2 = reportAdapter2.bookmarkList.indexOfFirst { it.reportId == bookmarkState.reportId }
 
             if (index != -1) {
                 reportAdapter.notifyItemChanged(index, ReportPayload.BookmarkPayload(bookmarkState.isBookmarked))
@@ -137,11 +140,7 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                 reportAdapter2.notifyItemChanged(index2, ReportPayload.BookmarkPayload(bookmarkState.isBookmarked))
             }
         }
-//        genreButtons.forEach {
-//            it.setOnClickListener {
-//                onClick(it)
-//            }
-//        }
+
         binding.sf.setOnClickListener {
             onClick(binding.sf)
         }
@@ -290,6 +289,8 @@ class MovieReportFragment : BaseFragment<FragmentMovieReportBinding>(FragmentMov
                     binding.reportRecyclerview2.visibility = View.GONE
                 }
             }
+        } else {
+            onRefresh()
         }
     }
 }

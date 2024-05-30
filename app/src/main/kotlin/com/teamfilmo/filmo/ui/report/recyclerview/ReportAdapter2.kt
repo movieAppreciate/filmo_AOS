@@ -12,7 +12,7 @@ import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
 import com.teamfilmo.filmo.ui.model.report.ReportItem
 
 class ReportAdapter2() : RecyclerView.Adapter<ReportAdapter2.ReportViewHolder>() {
-    private var bookmarkList: List<BookmarkResponse> = listOf()
+    var bookmarkList: List<BookmarkResponse> = listOf()
     var reportList: List<ReportItem> = listOf()
 
     interface ItemClick {

@@ -18,7 +18,7 @@ sealed class ReportPayload {
 }
 
 class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
-    private var bookmarkList: List<BookmarkResponse> = mutableListOf()
+    var bookmarkList: List<BookmarkResponse> = mutableListOf()
     var reportList: ArrayList<ReportItem> = arrayListOf()
 
     interface ItemClick {
@@ -73,7 +73,6 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
             }
 
         holder.bindBookmarkButton(isBookmarked)
-        // todo : likecount 로직 추가하기
     }
 
     override fun onBindViewHolder(
@@ -110,7 +109,6 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        Log.d("리사이클러뷰 어댑터 데이터 사이즈", reportList.size.toString())
         return reportList.size
     }
 
