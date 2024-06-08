@@ -1,10 +1,8 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkCount
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkList
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -34,8 +32,6 @@ interface BookmarkService {
         @Query("bookmarkId")
         bookmarkId: String? = null,
     ): Result<BookmarkListResponse>
-        bookmarkId: Int? = null,
-    ): Result<BookmarkList>
 
     /**
      * 북마크 수 조희
@@ -47,7 +43,7 @@ interface BookmarkService {
          */
         @Query("reportId")
         reportId: String,
-    ): Result<BookmarkCount>
+    ): Result<BookmarkCountResponse>
 
     /**
      * 북마크 삭제
@@ -58,6 +54,6 @@ interface BookmarkService {
          * 북마크 아이디
          */
         @Query("bookmarkId")
-        bookmarkId: Int,
+        bookmarkId: Long,
     ): Result<Unit>
 }

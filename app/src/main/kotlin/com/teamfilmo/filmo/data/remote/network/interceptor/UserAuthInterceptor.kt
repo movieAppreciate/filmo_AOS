@@ -51,7 +51,7 @@ class UserAuthInterceptor(
 
                     val result = authService.get().refreshToken(currentAccessToken, currentRefreshToken)
 
-                    return@withLock result.map { Token(it, it) }
+                    return@withLock result.map { Token(it.accessToken, it.refreshToken) }
                         .fold(
                             onSuccess = { it },
                             onFailure = { Token(null, null) },

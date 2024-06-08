@@ -67,8 +67,6 @@ object NetworkModule {
         @ContentType contentType: String,
         json: Json,
     ): Retrofit {
-        val contentType = contentType.toMediaType()
-        val jsonConfig = Json { ignoreUnknownKeys = true }
         return Retrofit
             .Builder()
             .baseUrl(baseUrl)
