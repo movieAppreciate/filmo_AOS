@@ -9,6 +9,7 @@ import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
+import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import com.teamfilmo.filmo.domain.repository.MovieRepository
@@ -21,6 +22,8 @@ import com.teamfilmo.filmo.model.report.ReportItem
 import com.teamfilmo.filmo.model.report.ReportList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 data class UiState(
@@ -51,6 +54,7 @@ class ReportViewModel
         private val movieRepository: MovieRepository,
         private val likeRepository: LikeRepository,
         private val bookmarkRepository: BookmarkRepository,
+        private val registBookmarkUseCase: RegistBookmarkUseCase,
     ) : BaseViewModel<ReportEffect, ReportEvent>() {
         private var genreIdList = listOf<String>()
         val uiState = MutableLiveData<UiState>()
@@ -103,22 +107,24 @@ class ReportViewModel
         }
 
         fun toggleBookmark(reportId: String) {
-            viewModelScope.launch {
-                getBookmarkResponse()
-                if (_bookmarkList.value != null) {
-                    val bookmark = _bookmarkList.value?.find { it.reportId == reportId }
-                    Log.d("북마크 토글", bookmark.toString())
-                    if (bookmark != null) {
-                        deleteBookmark(bookmark.id)
-                    } else {
-                        registBookmark(reportId)
-                    }
-                    getBookmarkResponse()
+            getBookmarkResponse()
+            if (_bookmarkList.value != null) {
+                val bookmark = _bookmarkList.value?.find { it.reportId == reportId }
+                Log.d("북마크 토글", bookmark.toString())
+                if (bookmark != null) {
+                    deleteBookmark(bookmark.id)
+                } else {
+                    registBookmark(reportId)
                 }
+                getBookmarkResponse()
             }
         }
 
         private suspend fun registBookmark(reportId: String): Result<BookmarkResponse> {
+            registBookmarkUseCase(reportId)
+                .onEach {
+                }.launchIn(viewModelScope)
+
             val currentState = uiState.value ?: UiState()
             val newState =
                 currentState.copy(
@@ -130,27 +136,25 @@ class ReportViewModel
             return bookmarkRepository.registBookmark(reportId)
         }
 
-        suspend fun searchMovieList(movie: String): Result<MovieResponse> {
-            return movieRepository.searchList(movie, 1)
-        }
+        suspend fun searchMovieList(movie: String): Result<MovieResponse> = movieRepository.searchList(movie, 1)
 
     /*
     북마크
      */
-        suspend fun getBookmarkResponse() {
-            val result = getBookmark()
-            if (result.isSuccess) {
-                _bookmarkList.value = result.getOrThrow().bookmarkList
+        private fun getBookmarkResponse() {
+            viewModelScope.launch {
+                val response =
+                    bookmarkRepository
+                        .getBookmarkList()
+                        .getOrNull()
+
+                _bookmarkList.value = response?.bookmarkList ?: emptyList()
             }
         }
 
-        private suspend fun getBookmark(): Result<BookmarkListResponse> {
-            return bookmarkRepository.getBookmarkList()
-        }
+        private suspend fun getBookmark(): Result<BookmarkListResponse> = bookmarkRepository.getBookmarkList()
 
-        suspend fun getBookmarkCount(reportId: String): Result<BookmarkCountResponse> {
-            return bookmarkRepository.getBookmarkCount(reportId)
-        }
+        suspend fun getBookmarkCount(reportId: String): Result<BookmarkCountResponse> = bookmarkRepository.getBookmarkCount(reportId)
 
         private suspend fun deleteBookmark(bookmarkId: Long): Result<Unit> {
             val currentState = uiState.value ?: UiState()
@@ -166,15 +170,13 @@ class ReportViewModel
     /*
     감상문
      */
-        private suspend fun searchReport(): Result<ReportInfo> {
-            return reportRepository.searchReport()
-        }
+        private suspend fun searchReport(): Result<ReportInfo> = reportRepository.searchReport()
 
         private fun mapForReportItem(
             reportList: List<ReportList>,
             likeList: MutableList<Boolean>,
-        ): List<ReportItem> {
-            return reportList.mapIndexed { index, reportItem ->
+        ): List<ReportItem> =
+            reportList.mapIndexed { index, reportItem ->
                 ReportItem(
                     reportId = reportItem.reportId,
                     title = reportItem.title,
@@ -189,7 +191,6 @@ class ReportViewModel
                     genreIds = genreIdList,
                 )
             }
-        }
 
         private fun mapForMovieItem(
             reportId: String,
@@ -236,9 +237,7 @@ class ReportViewModel
             }
         }
 
-        private suspend fun getReport(reportId: String): Result<Report> {
-            return reportRepository.getReport(reportId)
-        }
+        private suspend fun getReport(reportId: String): Result<Report> = reportRepository.getReport(reportId)
 
     /*
     좋아요
@@ -282,13 +281,9 @@ class ReportViewModel
             }
         }
 
-        private suspend fun checkLike(reportId: String): Result<Boolean> {
-            return likeRepository.checkLike(reportId)
-        }
+        private suspend fun checkLike(reportId: String): Result<Boolean> = likeRepository.checkLike(reportId)
 
-        private suspend fun countLike(reportId: String): Result<Int> {
-            return likeRepository.countLike(reportId)
-        }
+        private suspend fun countLike(reportId: String): Result<Int> = likeRepository.countLike(reportId)
 
         /**
          * 추천 감상문 데이터 처리 로직
@@ -356,7 +351,5 @@ class ReportViewModel
             }
         }
 
-        private suspend fun searchMovieDetail(movieId: Int): Result<DetailMovieResponse> {
-            return movieRepository.searchDetail(movieId = movieId)
-        }
+        private suspend fun searchMovieDetail(movieId: Int): Result<DetailMovieResponse> = movieRepository.searchDetail(movieId = movieId)
     }

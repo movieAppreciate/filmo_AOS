@@ -26,12 +26,21 @@ object Version {
 
 android {
     namespace = "com.teamfilmo.filmo"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "com.teamfilmo.filmo"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
         versionCode = Version.version_code
         versionName = Version.version_name
 
@@ -117,6 +126,7 @@ dependencies {
 
     // firebase
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 
     // google-login
     implementation(libs.google.services.auth)
@@ -216,7 +226,10 @@ dependencies {
 }
 
 protobuf {
-    val protobufVersion = libs.versions.protobuf.asProvider().get()
+    val protobufVersion =
+        libs.versions.protobuf
+            .asProvider()
+            .get()
 
     protoc {
         artifact = "com.google.protobuf:protoc:$protobufVersion"

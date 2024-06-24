@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.teamfilmo.filmo.R
+import com.teamfilmo.filmo.base.RecordLogger
+import com.teamfilmo.filmo.base.RecordLoggerImpl
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import com.teamfilmo.filmo.ui.auth.AuthActivity
@@ -11,9 +13,11 @@ import com.teamfilmo.filmo.ui.main.adapter.MainPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect, MainEvent>(
-    ActivityMainBinding::inflate,
-) {
+class MainActivity :
+    BaseActivity<ActivityMainBinding, MainViewModel, MainEffect, MainEvent>(
+        ActivityMainBinding::inflate,
+    ),
+    RecordLogger by RecordLoggerImpl(MainActivity::class.java.simpleName) {
     override val viewModel: MainViewModel by viewModels()
 
     private val requestLogin =

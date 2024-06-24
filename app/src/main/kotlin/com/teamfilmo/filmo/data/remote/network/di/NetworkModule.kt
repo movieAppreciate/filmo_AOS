@@ -56,6 +56,8 @@ object NetworkModule {
             encodeDefaults = true
             prettyPrint = true
             ignoreUnknownKeys = true
+
+            serializersModule
         }
 
     @Provides
@@ -66,13 +68,12 @@ object NetworkModule {
         okHttpClient: OkHttpClient,
         @ContentType contentType: String,
         json: Json,
-    ): Retrofit {
-        return Retrofit
+    ): Retrofit =
+        Retrofit
             .Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addCallAdapterFactory(ResultCallAdapter.Factory(retryCount))
             .addConverterFactory(json.asConverterFactory(contentType.toMediaType()))
             .build()
-    }
 }
